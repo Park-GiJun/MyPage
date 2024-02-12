@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Food Roulette</title>
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all" href="bootstrap.css"/>
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <div>
+                <label>
+                    <input type="text" id="inputText" placeholder="입력하세요">
+                </label>
+                <button type="button" class="btn btn-success" id="addButton">추가</button>
+                <button type="button" class="btn btn-danger" id="deleteButton">삭제</button>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div id="roulette">
+                <div class="row">
+                    <div id="real-roulette" class="col-12">
+                        <div name="roulette-circle">
+                            <div id="spinnerContainer" style="height: 50px; position: relative;">
+                                <div id="loadingSpinner" class="spinner-border text-primary" role="status"
+                                     style="visibility: hidden;">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="roulette-btn">
+                        <button type="button" class="btn btn-primary" id="startButton">시작</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4" id="resultTable">
+            <div class="container">
+                <h2>Restaurant Counts</h2>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Count</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="name : ${names}">
+                        <td th:text="${name.name}">Name</td>
+                        <td th:text="${name.count}">Count</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="container">
+                <h2>Restaurant Date</h2>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="date : ${dates}">
+                        <td th:text="${date.name}">Name</td>
+                        <td th:text="${date.date}">Count</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('startButton').addEventListener('click', function () {
+        const spinner = document.getElementById('loadingSpinner');
+        spinner.style.visibility = 'visible';
+
+        setTimeout(function () {
+            fetch('/restaurant/random')
+                .then(response => response.text())
+                .then(text => {
+                    alert('추천 레스토랑: ' + text);
+                    spinner.style.visibility = 'hidden';
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    spinner.style.visibility = 'hidden';
+                });
+        }, 700);
+    });
+    document.getElementById('addButton').addEventListener('click', function () {
+        const inputTextField = document.getElementById('inputText');
+        const inputText = document.getElementById('inputText').value;
+
+        fetch('/restaurant/addRestaurant', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/text'
+            },
+            body: inputText
+        })
+            .then(response => response.text())
+            .then(text => {
+                alert(text);
+                inputTextField.innerText = '';
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+    });
+
+    document.getElementById('deleteButton').addEventListener('click', function () {
+        const inputTextField = document.getElementById('inputText');
+        const inputText = document.getElementById('inputText').value;
+
+        fetch('/restaurant/deleteRestaurant', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/text'
+            },
+            body: inputText
+        })
+            .then(response => response.text())
+            .then(text => {
+                alert(text);
+                inputTextField.innerText = '';
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+    });
+</script>
+</body>
+</html>

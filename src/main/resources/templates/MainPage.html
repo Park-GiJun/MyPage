@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all" href="bootstrap.css"/>
+</head>
+<body>
+<div th:replace="~{header :: headerFragment}"></div>
+<div class="row">
+    <div class="col-1"></div>
+    <div class="col-10">
+        <ul class="list-group">
+            <li class="list-group-item"><a href="/restaurant/">밥집</a></li>
+        </ul>
+    </div>
+    <div class="col-1"></div>
+</div>
+
+
+</body>
+</html>
