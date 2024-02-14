@@ -13,39 +13,41 @@
     <button type="button" id="searchButton">검색</button>
 </div>
 <div>
+    <div th:if="${data == null}">
+        <p>정보가 없습니다.</p>
+    </div>
+    <div th:unless="${data == null}">
     <table>
         <thead>
         <tr>
-            <th>이름</th>
             <th>주소</th>
             <th>상세보기</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:if="${data == null}">
-            <td colspan="3">정보가 없습니다.</td>
-        </tr>
-        <tr th:each="item : ${data}" th:if="${data != null}">
-            <td th:text="${item.address_name}">이름</td>
-            <td th:text="${item.address.address_name}">주소</td>
-            <td><button type="button" onclick="makeMap([[${item.x}]], [[${item.y}]])">상세보기</button></td>
+        <tr th:each="item : ${data}">
+            <td th:text="${item.address_name}">주소 이름</td>
+            <td>
+                <button type="button" th:onclick="'makeMap(' + ${item.x} + ',' + ${item.y} + ');'">상세보기</button>
+            </td>
         </tr>
         </tbody>
     </table>
+    </div>
 </div>
 <div id="map" style="width:750px;height:350px;"></div>
 
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=39bcf355054a8647d859b444a55e2f0e"></script>
 <script>
 
-    document.getElementById('searchButton').addEventListener('click', function (){
+    document.getElementById('searchButton').addEventListener('click', function () {
         const inp = document.getElementById('inpText').value;
 
         console.log("inpText : " + inp);
 
-        fetch ('/getJson',{
+        fetch('/getJson', {
             method: 'POST',
-            headers:{
+            headers: {
                 'Content-Type': 'application/text'
             },
             body: inp
@@ -62,12 +64,12 @@
             });
     })
 
-    function makeMap(x,y){
+    function makeMap(x, y) {
         var mapContainer = document.getElementById('map'), // 지도를 표시할 div
             mapOption = {
                 center: new kakao.maps.LatLng(x, y), // 지도의 중심좌표
                 level: 3, // 지도의 확대 레벨
-                mapTypeId : kakao.maps.MapTypeId.ROADMAP // 지도종류
+                mapTypeId: kakao.maps.MapTypeId.ROADMAP // 지도종류
             };
         // 지도를 생성한다
         var map = new kakao.maps.Map(mapContainer, mapOption);

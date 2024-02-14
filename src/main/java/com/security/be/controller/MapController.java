@@ -21,7 +21,7 @@ import java.util.List;
 @Controller
 public class MapController {
 
-	private final String MAP_PAGE = "/map";
+	private final String MAP_PAGE = "map";
 
 	@PostMapping("/getJson")
 	public String getJson (@RequestBody String inp, Model model) throws Exception {
